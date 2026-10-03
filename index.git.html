@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bytebox - Montagem de PCs</title>
+<style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+    header{background:#111827;color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+    header h1{margin:0;color:#38bdf8}
+    header span{font-size:14px;color:#d1d5db}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    nav button,.btn{border:0;border-radius:9px;padding:11px 15px;cursor:pointer;font-weight:bold}
+    nav button{background:#1f2937;color:white}
+    nav button:hover,.btn:hover{opacity:.9}
+    main{max-width:1100px;margin:auto;padding:35px 20px}
+    section{display:none}
+    section.active{display:block}
+    .hero{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:white;border-radius:18px;padding:45px;text-align:center;margin-bottom:25px}
+    .hero h2{font-size:36px;margin:10px 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+    .card{background:white;border-radius:15px;padding:22px;box-shadow:0 5px 18px #00000012}
+    .card h3{margin-top:0}
+    .card button{width:100%;background:#2563eb;color:white;border:0;padding:11px;border-radius:8px;cursor:pointer}
+    label{display:block;font-weight:bold;margin:15px 0 7px}
+    input,select,textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:15px}
+    textarea{min-height:110px;resize:vertical}
+    .form{background:white;padding:25px;border-radius:15px;box-shadow:0 5px 18px #00000012;max-width:700px;margin:auto}
+    .result{margin-top:20px;background:#ecfdf5;border-left:5px solid #10b981;padding:18px;border-radius:8px}
+    .error{background:#fef2f2;border-left-color:#ef4444}
+    .price{font-size:20px;font-weight:bold;color:#2563eb}
+    .cart{background:#fff7ed;border-left:5px solid #f97316;padding:18px;border-radius:10px;margin-top:20px}
+    .stars{display:flex;gap:7px;font-size:38px;cursor:pointer;margin:10px 0}
+    .star{color:#cbd5e1}.star.selected{color:#f59e0b}
+    footer{text-align:center;padding:30px;color:#64748b}
+    .back{background:#64748b;color:white;margin-bottom:20px}
+    .small{font-size:13px;color:#64748b}
+</style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>🖥️ BYTEBOX</h1>
+        <span>Montar seu PC é simples e inteligente</span>
+    </div>
+    <nav>
+        <button onclick="show('inicio')">Início</button>
+        <button onclick="show('cadastro')">Cadastro</button>
+        <button onclick="show('montar')">Montar PC</button>
+        <button onclick="show('suporte')">Suporte</button>
+        <button onclick="show('regional')">Valor Total</button>
+        <button onclick="show('avaliacao')">Avaliação</button>
+    </nav>
+</header>
+
+<main>
+
+<section id="inicio" class="active">
+    <div class="hero">
+        <div style="font-size:55px">🖥️</div>
+        <h2>Seja Bem-Vindo ao Bytebox</h2>
+        <p>Onde montar seu PC é simples e inteligente.</p>
+    </div>
+    <div class="grid">
+        <div class="card"><h3>👤 Cadastro</h3><p>Cadastre seus dados.</p><button onclick="show('cadastro')">Cadastrar</button></div>
+        <div class="card"><h3>🛠️ Montar PC</h3><p>Escolha suas peças.</p><button onclick="show('montar')">Montar meu PC</button></div>
+        <div class="card"><h3>🔧 Suporte</h3><p>Registre uma solicitação.</p><button onclick="show('suporte')">Solicitar suporte</button></div>
+        <div class="card"><h3>📍 Valor Total</h3><p>Informe o seu bairro.</p><button onclick="show('regional')">Consultar</button></div>
+        <div class="card"><h3>⭐ Avaliação</h3><p>Avalie nosso atendimento.</p><button onclick="show('avaliacao')">Avaliar</button></div>
+    </div>
+</section>
+
+<section id="cadastro">
+    <button class="btn back" onclick="show('inicio')">← Voltar</button>
+    <div class="form">
+        <h2>👤 Cadastro</h2>
+        <label>Nome</label><input id="nome" placeholder="Digite seu nome">
+        <label>Gmail</label><input id="gmail" type="email" placeholder="Digite seu Gmail">
+        <label>CPF</label><input id="cpf" placeholder="Digite seu CPF">
+        <br><br><button class="btn" style="background:#2563eb;color:white" onclick="cadastrar()">Cadastrar</button>
+        <div id="cadastroResultado"></div>
+    </div>
+</section>
+
+<section id="montar">
+    <button class="btn back" onclick="show('inicio')">← Voltar</button>
+    <h2>🖥️ Monte seu PC</h2>
+    <p>Escolha uma categoria e adicione os produtos ao carrinho.</p>
+    <div class="grid" id="produtos"></div>
+    <div class="cart">
+        <h3>🛒 Carrinho</h3>
+        <div id="carrinho">Nenhum item adicionado.</div>
+        <h3 id="total">Total: R$ 0,00</h3>
+    </div>
+</section>
+
+<section id="suporte">
+    <button class="btn back" onclick="show('inicio')">← Voltar</button>
+    <div class="form">
+        <h2>🔧 Suporte Técnico</h2>
+        <label>Modelo do computador</label>
+        <select id="modelo">
+            <option value="">Selecione</option>
+            <option>Desktop</option>
+            <option>Notebook</option>
+        </select>
+        <label>Qual problema você está tendo?</label>
+        <textarea id="problema" placeholder="Explique o problema..."></textarea>
+        <br><br>
+        <button class="btn" style="background:#2563eb;color:white" onclick="registrarSuporte()">Registrar serviço</button>
+        <div id="suporteResultado"></div>
+    </div>
+</section>
+
+<section id="avaliacao">
+    <button class="btn back" onclick="show('inicio')">← Voltar</button>
+    <div class="form">
+        <h2>⭐ Avaliação de Atendimento</h2>
+        <p>Como você avalia o nosso atendimento?</p>
+        <div class="stars" id="stars">
+            <span class="star" onclick="avaliar(1)">☆</span>
+            <span class="star" onclick="avaliar(2)">☆</span>
+            <span class="star" onclick="avaliar(3)">☆</span>
+            <span class="star" onclick="avaliar(4)">☆</span>
+            <span class="star" onclick="avaliar(5)">☆</span>
+        </div>
+        <p id="notaTexto">Escolha uma nota de 1 a 5.</p>
+        <button class="btn" style="background:#2563eb;color:white" onclick="enviarAvaliacao()">Enviar avaliação</button>
+        <div id="avaliacaoResultado"></div>
+    </div>
+</section>
+
+<section id="regional">
+    <button class="btn back" onclick="show('inicio')">← Voltar</button>
+    <div class="form">
+        <h2>📍 Consulta de Regional de Fortaleza</h2>
+        <label>Digite o bairro</label>
+        <input id="bairro" placeholder="Ex.: Messejana">
+        <br><br>
+        <button class="btn" style="background:#2563eb;color:white" onclick="consultarRegional()">Consultar</button>
+        <div id="regionalResultado"></div>
+    </div>
+</section>
+
+</main>
+
+<footer>Bytebox • Sistema de montagem e suporte de computadores</footer>
+
+<script>
+const produtos = [
+    ["Memória RAM","8GB DDR4 3200MHz",239.99],
+    ["Memória RAM","16GB DDR4 3600MHz",399.99],
+    ["Memória RAM","32GB DDR4 3600MHz",712.30],
+    ["Placa de Vídeo","GEFORCE RTX 4060 8GB GDDR6",3299.00],
+    ["Placa de Vídeo","AMD RADEON RX 7700 12GB GDDR6",2889.99],
+    ["Placa de Vídeo","ASRock Intel Arc B570 10GB GDDR6",1829.99],
+    ["Processador","AMD Ryzen 5 7600 5.1GHz DDR5",1499.99],
+    ["Processador","AMD Ryzen 5 5600T 4.5GHz DDR4",975.90],
+    ["Processador","Intel Core Ultra 7 265K 5.5GHz DDR5",2291.31],
+    ["Placa-mãe","Asus ROG sTRIX B550-F Gaming WI-FI",1408.99],
+    ["Placa-mãe","GIGABYTE 890 AORUS ELITE",2243.93],
+    ["Placa-mãe","MSI MAG B550 TOMAHAWK",1190.16],
+    ["Gabinete","Gabinete Gamer SuperFrame Vhagar Mid Tower",399.90],
+    ["Gabinete","Gabinete Cooler Master Elite 481 Wood, ARGB",899.99],
+    ["Gabinete","Gabinete Gamer NZXT H5 Flow RGB",929.99],
+    ["Fonte","Fonte Pichau Cluster 750W PCIe 5.0 Full Modular",499.99],
+    ["Fonte","OPENBOX Fonte Corsair RM850e 850W Full-Modular",779.99],
+    ["Fonte","Fonte Redragon RGPS-850W Full-Modular",1199.99],
+    ["Periférico","Teclado Mecanico Attack Shark X820 Ultra",439.99],
+    ["Periférico","Teclado Mecanico Attack Shark X98PRO",479.99],
+    ["Periférico","Mouse Sem Fio Logitech MX Master 3S",586.99],
+    ["Periférico","Mouse Gamer Sem Fio Attack Shark X11",197.91]
+];
+
+let carrinho = [];
+let nota = 0;
+
+function show(id){
+    document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    window.scrollTo(0,0);
+}
+
+function dinheiro(v){
+    return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+function carregarProdutos(){
+    const area=document.getElementById("produtos");
+    area.innerHTML="";
+    produtos.forEach((p,i)=>{
+        area.innerHTML += `
+        <div class="card">
+            <p class="small">${p[0]}</p>
+            <h3>${p[1]}</h3>
+            <p class="price">${dinheiro(p[2])}</p>
+            <label>Quantidade</label>
+            <input type="number" id="qtd${i}" value="1" min="1">
+            <br><br>
+            <button onclick="adicionar(${i})">Adicionar ao carrinho</button>
+        </div>`;
+    });
+}
+
+function adicionar(i){
+    const qtd=parseInt(document.getElementById("qtd"+i).value)||1;
+    carrinho.push({nome:produtos[i][1],preco:produtos[i][2],qtd});
+    atualizarCarrinho();
+}
+
+function atualizarCarrinho(){
+    if(carrinho.length===0){
+        document.getElementById("carrinho").innerHTML="Nenhum item adicionado.";
+        document.getElementById("total").innerText="Total: R$ 0,00";
+        return;
+    }
+    let total=0;
+    let html="";
+    carrinho.forEach((item,i)=>{
+        const subtotal=item.preco*item.qtd;
+        total+=subtotal;
+        html += `<p><strong>${item.qtd}x</strong> ${item.nome} — ${dinheiro(subtotal)}
+        <button onclick="remover(${i})" style="margin-left:8px">Remover</button></p>`;
+    });
+    document.getElementById("carrinho").innerHTML=html;
+    document.getElementById("total").innerText="Total: "+dinheiro(total);
+}
+
+function remover(i){
+    carrinho.splice(i,1);
+    atualizarCarrinho();
+}
+
+function cadastrar(){
+    const nome=document.getElementById("nome").value;
+    const gmail=document.getElementById("gmail").value;
+    const cpf=document.getElementById("cpf").value;
+    if(!nome||!gmail||!cpf){
+        document.getElementById("cadastroResultado").innerHTML='<div class="result error">Preencha todos os campos.</div>';
+        return;
+    }
+    document.getElementById("cadastroResultado").innerHTML=`<div class="result">✅ Obrigado por adicionar seus dados, <strong>${nome}</strong>!</div>`;
+}
+
+function registrarSuporte(){
+    const modelo=document.getElementById("modelo").value;
+    const problema=document.getElementById("problema").value;
+    const area=document.getElementById("suporteResultado");
+    if(!modelo||!problema){
+        area.innerHTML='<div class="result error">Preencha o modelo e explique o problema.</div>';
+        return;
+    }
+    const ordem=Math.floor(Math.random()*1000);
+    area.innerHTML=`
+    <div class="result">
+        <h3>✅ Serviço registrado com sucesso!</h3>
+        <p><strong>Ordem de serviço:</strong> ${ordem}</p>
+        <p><strong>Modelo:</strong> ${modelo}</p>
+        <p><strong>Problema:</strong> ${problema}</p>
+        <p><strong>Entregar no endereço:</strong> Av. Desembargador Moreira, 1301</p>
+        <p><strong>Apresentar a ordem de serviço.</strong></p>
+    </div>`;
+}
+
+function avaliar(n){
+    nota=n;
+    document.querySelectorAll(".star").forEach((s,i)=>{
+        s.textContent=i<n?"★":"☆";
+        s.classList.toggle("selected",i<n);
+    });
+    document.getElementById("notaTexto").innerText="Você selecionou "+n+" de 5 estrelas.";
+}
+
+function enviarAvaliacao(){
+    const area=document.getElementById("avaliacaoResultado");
+    if(!nota){
+        area.innerHTML='<div class="result error">Escolha uma nota antes de enviar.</div>';
+        return;
+    }
+    area.innerHTML='<div class="result">✅ Obrigado por avaliar nosso atendimento!</div>';
+}
+
+const regionais={
+    "SER 1":["alvaro weyne","barra do ceará","bela vista","bonfim","cristo redentor","cruz","farias brito","floresta","jacarecanga","jardim iracema","jardim guanabara","moura brasil","pirambu","pres. kennedy","presidente kennedy","são gerardo","vila elery","vila ellery","vila união"],
+    "SER 2":["aldeota","cais do porto","cidade 2000","cocó","de lourdes","eng. luciano cavalcante","guararapes","joaquim távora","meireles","mucuripe","papicu","parque do isec","praia de iracema","praia do futuro i","praia do futuro ii","salinas","são joão do tauape","varjota","vicente pinzon","vicente pinzón","centro","dionisio torres","dionísio torres"],
+    "SER 3":["aeroporto","autran nunes","bom futuro","bonsucesso","couto fernandes","damas","edson queiroz","fátima","genibaú","granja lisboa","granja portugal","henrique jorge","jóquei clube","montese","parangaba","parreão","pici","rodolfo teófilo","siqueira"],
+    "SER 4":["aerolândia","alto da balança","benfica","castelão","conjunto ceará i","conjunto ceará ii","dias macedo","jardim américa","jardim das oliveiras","jardim das serras","jangurussu","maraponga","mondubim","novo mondubim","parque manibura","parque são josé","prefeito josé walter","são bento","sítio são joão"],
+    "SER 5":["aracapé","canindezinho","conjunto esperança","itaperi","jardim cearense","jardim ubajara","maraponga","manuel sátiro","parque dois irmãos","parque genezaret","parque santa rosa","pedras","planalto mirim","sabiaguaba","vila peri","vila manuel sátiro","vila união"],
+    "SER 6":["ancuri","barroso","cajazeiras","cambeba","cidade dos funcionários","coacu","coaçu","curió","guajeru","isec","jardim das oliveiras","lagoa redonda","messejana","novo eng. luciano cavalcante","paupina","sabiaguaba","santa maria","sapiranga","passaré"]
+};
+
+function consultarRegional(){
+    const bairro=document.getElementById("bairro").value.toLowerCase().trim();
+    let regional=null;
+    for(const [r,bairros] of Object.entries(regionais)){
+        if(bairros.includes(bairro)){regional=r;break;}
+    }
+    document.getElementById("regionalResultado").innerHTML=regional
+      ? `<div class="result">📍 <strong>${bairro}</strong> pertence à <strong>${regional}</strong>.</div>`
+      : `<div class="result error">Bairro não encontrado na lista.</div>`;
+}
+
+carregarProdutos();
+</script>
+</body>
+</html>
